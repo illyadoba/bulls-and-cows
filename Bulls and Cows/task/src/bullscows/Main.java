@@ -19,11 +19,11 @@ public class Main {
         }
 
         if (cows == 0 && bulls == 0) {
-            System.out.println("Grade: None. The secret code is " + secretCode + ".");
+            System.out.printf("Grade: None. The secret code is %s.", secretCode);
         } else if (bulls == 0) {
-            System.out.println("Grade: " + cows + " cow(s). The secret code is " + secretCode + ".");
+            System.out.printf("Grade: %d cow(s). The secret code is %s.", cows, secretCode);
         } else {
-            System.out.println("Grade: " + bulls + " bull(s) and " + cows + " cow(s). The secret code is " + secretCode + ".");
+            System.out.printf("Grade: %d bull(s) and %d cow(s). The secret code is %s.", bulls, cows, secretCode);
         }
     }
 }
