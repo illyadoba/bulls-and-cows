@@ -5,27 +5,17 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String secretCode = String.valueOf(generateSecretCode(scanner.nextInt()));
-        System.out.println("The random secret number is " + secretCode);
-//        String guessCode = scanner.nextLine();
-        int cows = 0;
-        int bulls = 0;
-//
-//        for (int i = 0; i < secretCode.length(); i++) {
-//            if (secretCode.charAt(i) == guessCode.charAt(i)) {
-//                bulls++;
-//            } else if (secretCode.contains(String.valueOf(guessCode.charAt(i)))) {
-//                cows++;
-//            }
-//        }
-//
-//        if (cows == 0 && bulls == 0) {
-//            System.out.printf("Grade: None. The secret code is %s.", secretCode);
-//        } else if (bulls == 0) {
-//            System.out.printf("Grade: %d cow(s). The secret code is %s.", cows, secretCode);
-//        } else {
-//            System.out.printf("Grade: %d bull(s) and %d cow(s). The secret code is %s.", bulls, cows, secretCode);
-//        }
+        System.out.println("Please, enter the secret code's length:");
+        int size = scanner.nextInt();
+        String secretCode = String.valueOf(generateSecretCode(size));
+        System.out.println("Okay, let's start a game!");
+
+        int turn = 0;
+        do {
+            turn++;
+            System.out.printf("Turn %d:\n", turn);
+        } while (gradeInput(secretCode, scanner.next()) < size);
+        System.out.println("Congratulations! You guessed the secret code.");
     }
 
     public static StringBuilder generateSecretCode(int size) {
@@ -46,5 +36,27 @@ public class Main {
             }
         }
         return secretCode;
+    }
+
+    public static int gradeInput(String secretCode, String guessCode) {
+        int cows = 0;
+        int bulls = 0;
+
+        for (int i = 0; i < secretCode.length(); i++) {
+            if (secretCode.charAt(i) == guessCode.charAt(i)) {
+                bulls++;
+            } else if (secretCode.contains(String.valueOf(guessCode.charAt(i)))) {
+                cows++;
+            }
+        }
+
+        if (cows == 0 && bulls == 0) {
+            System.out.println("Grade: None.");
+        } else if (bulls == 0) {
+            System.out.printf("Grade: %d cow(s).\n", cows);
+        } else {
+            System.out.printf("Grade: %d bull(s) and %d cow(s).\n", bulls, cows);
+        }
+        return bulls;
     }
 }
