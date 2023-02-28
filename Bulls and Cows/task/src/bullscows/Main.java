@@ -1,8 +1,12 @@
 package bullscows;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+
+    final static int MAX_SIZE = 10;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please, enter the secret code's length:");
@@ -20,21 +24,18 @@ public class Main {
 
     public static StringBuilder generateSecretCode(int size) {
         StringBuilder secretCode = new StringBuilder();
-        if (size > 10) {
+        Random random = new Random();
+        if (size > MAX_SIZE) {
             System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.");
             return secretCode;
         }
         while (secretCode.length() < size) {
-            String pseudoRandomNumber = Long.toString(System.nanoTime());
-            for (int i = 0; i < pseudoRandomNumber.length(); i++) {
-                if (!secretCode.toString().contains(String.valueOf(pseudoRandomNumber.charAt(i)))) {
-                    secretCode.append(pseudoRandomNumber.charAt(i));
-                }
-                if (secretCode.length() == size) {
-                    break;
-                }
+            int r = random.nextInt(MAX_SIZE);
+            if (!secretCode.toString().contains(Integer.toString(r))) {
+                secretCode.append(r);
             }
         }
+        System.out.println(secretCode);
         return secretCode;
     }
 
