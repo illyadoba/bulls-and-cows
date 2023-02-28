@@ -1,41 +1,76 @@
 package bullscows;
 
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
 
-    final static int MAX_SIZE = 10;
+    final static int MAX_SIZE = 36;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please, enter the secret code's length:");
-        int size = scanner.nextInt();
-        String secretCode = String.valueOf(generateSecretCode(size));
+        int length = 0;
+        int possibleChar = 0;
+        try {
+            System.out.println("Please, enter the secret code's length:");
+            length = scanner.nextInt();
+            System.out.println("Input the number of possible symbols in the code:");
+            possibleChar = scanner.nextInt();
+            if (length > possibleChar) {
+                System.out.println("Error: it's not possible to generate a code with a length of " + length + " with " + possibleChar + " unique symbols.");
+                System.exit(0);
+            }
+            if (possibleChar > MAX_SIZE) {
+                System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+                System.exit(0);
+            }
+            if (length < 1) {
+                System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+                System.exit(0);
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Error: \"" + scanner.next() + "\" isn't a valid number.");
+            System.exit(0);
+        }
+
+
+        secretPrepared(length, possibleChar);
+
+        String secretCode = String.valueOf(generateSecretCode(length, possibleChar));
         System.out.println("Okay, let's start a game!");
 
         int turn = 0;
         do {
             turn++;
             System.out.printf("Turn %d:\n", turn);
-        } while (gradeInput(secretCode, scanner.next()) < size);
+        } while (gradeInput(secretCode, scanner.next()) < length);
         System.out.println("Congratulations! You guessed the secret code.");
     }
 
-    public static StringBuilder generateSecretCode(int size) {
+    public static StringBuilder generateSecretCode(int size, int possibleChar) {
         StringBuilder secretCode = new StringBuilder();
         Random random = new Random();
-        if (size > MAX_SIZE) {
-            System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.");
-            return secretCode;
-        }
         while (secretCode.length() < size) {
-            int r = random.nextInt(MAX_SIZE);
-            if (!secretCode.toString().contains(Integer.toString(r))) {
-                secretCode.append(r);
+            int rNumber = random.nextInt(10);
+            int rChar = random.nextInt('z' - 'a' + 1) + 'a';
+            boolean checkRandomNumber = !secretCode.toString().contains(Integer.toString(rNumber));
+            if (possibleChar < 11) {
+                if (checkRandomNumber) {
+                    secretCode.append(rNumber);
+                }
+            } else {
+                if (random.nextBoolean()) {
+                    if (!secretCode.toString().contains(String.valueOf((char) rChar))) {
+                        secretCode.append((char) rChar);
+                    }
+                } else {
+                    if (checkRandomNumber) {
+                        secretCode.append(rNumber);
+                    }
+                }
             }
         }
-        System.out.println(secretCode);
         return secretCode;
     }
 
@@ -59,5 +94,17 @@ public class Main {
             System.out.printf("Grade: %d bull(s) and %d cow(s).\n", bulls, cows);
         }
         return bulls;
+    }
+
+    public static void secretPrepared(int length, int possibleChar) {
+        System.out.print("The secret is prepared: ");
+        for (int i = 0; i < length; i++) {
+            System.out.print('*');
+        }
+        System.out.print(" (0-9");
+        if (possibleChar > 10) {
+            System.out.printf(", a-%c", 'a' + possibleChar - 11);
+        }
+        System.out.println(").");
     }
 }
